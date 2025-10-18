@@ -2,6 +2,7 @@ package auth
 
 import (
 	"authentication-server/internal/utils"
+	"fmt"
 
 	"github.com/google/uuid"
 )
@@ -24,19 +25,19 @@ func (s *service) Login(data *LoginObject) (*AuthResponse, error) {
 }
 
 func (s *service) Register(data *RegisterObject) (*AuthResponse, error) {
+	fmt.Print(data)
 	hashedPassword, err := utils.HashPassword(data.Password)
 	if err != nil {
 		return nil, err
 	}
 
 	user := UserDAO{
-		Id: uuid.NewString(),
+		Id:        uuid.NewString(),
 		FirstName: data.FirstName,
-		LastName: data.LastName,
-		Email: data.Email,
-		Password: hashedPassword,
+		LastName:  data.LastName,
+		Email:     data.Email,
+		Password:  hashedPassword,
 	}
-
 
 	responseData, err := s.repository.CreateUser(&user)
 	if err != nil {
@@ -45,13 +46,14 @@ func (s *service) Register(data *RegisterObject) (*AuthResponse, error) {
 
 	return &AuthResponse{
 		User: UserDTO{
+			Id:        responseData.Id,
 			FirstName: responseData.FirstName,
-			LastName: responseData.LastName,
-			Email: responseData.Email,
+			LastName:  responseData.LastName,
+			Email:     responseData.Email,
 			CreatedAt: responseData.CreatedAt,
 			UpdatedAt: responseData.UpdatedAt,
 		},
-		AccessToken: "",
+		AccessToken:  "",
 		RefreshToken: "",
 	}, nil
 }

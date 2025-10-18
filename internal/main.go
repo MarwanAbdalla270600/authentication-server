@@ -3,7 +3,6 @@ package main
 import (
 	"authentication-server/internal/auth"
 	"authentication-server/internal/utils"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
@@ -24,11 +23,10 @@ func main() {
 		panic(err)
 	}
 
-	controller := auth.NewController(nil)
-
-	server.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, "hello")
-	})
+	// init singletons
+	repo := auth.NewRepository(db)
+	service := auth.NewService(repo)
+	controller := auth.NewController(service)
 
 	server.POST("/auth/register", controller.Register)
 	server.POST("/auth/login", controller.Login)

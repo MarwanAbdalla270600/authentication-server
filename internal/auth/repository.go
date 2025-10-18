@@ -27,13 +27,18 @@ func (r *repository) GetUserByEmail(email string) (*UserDAO, error) {
 }
 
 func (r *repository) CreateUser(data *UserDAO) (*UserDAO, error) {
-	var user UserDAO
+	query := `
+        INSERT INTO users (id, first_name, last_name, email, password)
+        VALUES (:id, :first_name, :last_name, :email, :password)
+    `
+	_, err := r.db.NamedExec(query, data)
+	if err != nil {
+		return nil, err
+	}
 
-	err := r.db.Get(&user, `
-		INSERT INTO users (id, first_name, last_name, email, password)
-		VALUES (:id, :first_name, :last_name, :email, :password)
-		RETURNING *;
-	`, data)
+	// Re-fetch the row to get timestamps
+	var user UserDAO
+	err = r.db.Get(&user, "SELECT * FROM users WHERE id = ?", data.Id)
 	if err != nil {
 		return nil, err
 	}
