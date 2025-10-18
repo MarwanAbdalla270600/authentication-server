@@ -1,10 +1,14 @@
 package auth
 
-import "github.com/jmoiron/sqlx"
+import (
+	"authentication-server/internal/entity"
+
+	"github.com/jmoiron/sqlx"
+)
 
 type RepoInterface interface {
-	GetUserByEmail(email string) (*UserDAO, error)
-	CreateUser(data *UserDAO) (*UserDAO, error)
+	GetUserByEmail(email string) (*entity.UserDAO, error)
+	CreateUser(data *entity.UserDAO) (*entity.UserDAO, error)
 }
 
 type repository struct {
@@ -17,8 +21,8 @@ func NewRepository(db *sqlx.DB) RepoInterface {
 	}
 }
 
-func (r *repository) GetUserByEmail(email string) (*UserDAO, error) {
-	var user UserDAO
+func (r *repository) GetUserByEmail(email string) (*entity.UserDAO, error) {
+	var user entity.UserDAO
 	err := r.db.Get(&user, "`SELECT * FROM users WHERE email = ?`, email")
 	if err != nil {
 		return nil, err
@@ -26,10 +30,10 @@ func (r *repository) GetUserByEmail(email string) (*UserDAO, error) {
 	return &user, nil
 }
 
-func (r *repository) CreateUser(data *UserDAO) (*UserDAO, error) {
+func (r *repository) CreateUser(data *entity.UserDAO) (*entity.UserDAO, error) {
 	query := `
-        INSERT INTO users (id, first_name, last_name, email, password)
-        VALUES (:id, :first_name, :last_name, :email, :password)
+        INSERT INTO users (id, first_name, last_name, email, password, role)
+        VALUES (:id, :first_name, :last_name, :email, :password, :role)
     `
 	_, err := r.db.NamedExec(query, data)
 	if err != nil {
@@ -37,7 +41,7 @@ func (r *repository) CreateUser(data *UserDAO) (*UserDAO, error) {
 	}
 
 	// Re-fetch the row to get timestamps
-	var user UserDAO
+	var user entity.UserDAO
 	err = r.db.Get(&user, "SELECT * FROM users WHERE id = ?", data.Id)
 	if err != nil {
 		return nil, err

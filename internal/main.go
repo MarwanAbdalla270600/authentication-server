@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+
 	server := gin.Default()
 
 	//database logic here

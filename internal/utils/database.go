@@ -9,6 +9,7 @@ func CreateUserTable(db *sqlx.DB) error {
     last_name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
+    role TEXT NOT NULL CHECK(role IN ('user', 'admin')) DEFAULT 'user',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );`)

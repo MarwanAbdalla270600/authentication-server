@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"authentication-server/internal/entity"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +18,7 @@ func NewController(service ServiceInterface) *controller {
 }
 
 func (c *controller) Register(ctx *gin.Context) {
-	var body RegisterObject
+	var body entity.RegisterObject
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
