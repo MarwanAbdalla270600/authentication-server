@@ -2,13 +2,27 @@ package main
 
 import (
 	"authentication-server/internal/auth"
+	"authentication-server/internal/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
+	_ "modernc.org/sqlite"
 )
 
 func main() {
 	server := gin.Default()
+
+	//database logic here
+	db, err := sqlx.Open("sqlite", "./data.db")
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	err = utils.CreateUserTable(db)
+	if err != nil {
+		panic(err)
+	}
 
 	controller := auth.NewController(nil)
 

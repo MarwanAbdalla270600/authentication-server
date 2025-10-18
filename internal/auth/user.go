@@ -26,6 +26,14 @@ type LoginObject struct {
 	Password string `json:"password"`
 }
 
+
+type RegisterObject struct {
+	FirstName string `json:"firstName" binding:"required"`
+	LastName  string `json:"lastName" binding:"required"`
+	Email     string `json:"email" binding:"required,email"`
+	Password  string `json:"password" binding:"required"`
+}
+
 type AuthResponse struct {
 	User         UserDTO `json:"user"`
 	AccessToken  string  `json:"accessToken"`

@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Go App (internal/main.go)",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}/internal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "GIN_MODE": "debug",
+                "CGO_ENABLED": "1"
+            },
+            "args": [],
+            "buildFlags": ["-gcflags=all=-N -l"]
+        }
+    ]
+}
