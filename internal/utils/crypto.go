@@ -13,11 +13,14 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-
-
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	return string(bytes), err
+}
+
+func ComparePassword(hashedPassword, plainPassword string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(plainPassword))
+	return err == nil
 }
 
 func loadPrivateKey(path string) (*ecdsa.PrivateKey, error) {
@@ -35,7 +38,6 @@ func loadPrivateKey(path string) (*ecdsa.PrivateKey, error) {
 	}
 	return key, nil
 }
-
 
 func CreateAccessToken(user *entity.UserDAO) (string, error) {
 	privKey, err := loadPrivateKey("keys/private.pem")

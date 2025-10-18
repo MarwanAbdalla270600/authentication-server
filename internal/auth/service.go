@@ -3,6 +3,7 @@ package auth
 import (
 	"authentication-server/internal/entity"
 	"authentication-server/internal/utils"
+	"errors"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -22,7 +23,33 @@ func NewService(repository RepoInterface) ServiceInterface {
 }
 
 func (s *service) Login(data *entity.LoginObject) (*entity.AuthResponse, error) {
-	return nil, nil
+	foundUser, err := s.repository.GetUserByEmail(data.Email)
+	if err != nil {
+		return nil, err
+	}
+	if !utils.ComparePassword(foundUser.Password, data.Password) {
+		return nil, errors.New("password is incorrect")
+	}
+	
+	accessToken, err := utils.CreateAccessToken(foundUser)
+	refreshToken := uuid.NewString()
+	if err != nil {
+		return nil, err
+	}
+
+	return &entity.AuthResponse{
+		User: entity.UserDTO{
+			Id:        foundUser.Id,
+			FirstName: foundUser.FirstName,
+			LastName:  foundUser.LastName,
+			Email:     foundUser.Email,
+			Role:      foundUser.Role,
+			CreatedAt: foundUser.CreatedAt,
+			UpdatedAt: foundUser.UpdatedAt,
+		},
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, nil
 }
 
 func (s *service) Register(data *entity.RegisterObject) (*entity.AuthResponse, error) {
@@ -47,6 +74,7 @@ func (s *service) Register(data *entity.RegisterObject) (*entity.AuthResponse, e
 	}
 
 	accessToken, err := utils.CreateAccessToken(responseData)
+	refreshToken := uuid.NewString()
 	if err != nil {
 		return nil, err
 	}
@@ -62,6 +90,6 @@ func (s *service) Register(data *entity.RegisterObject) (*entity.AuthResponse, e
 			UpdatedAt: responseData.UpdatedAt,
 		},
 		AccessToken:  accessToken,
-		RefreshToken: "",
+		RefreshToken: refreshToken,
 	}, nil
 }
