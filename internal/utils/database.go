@@ -13,6 +13,5 @@ func CreateUserTable(db *sqlx.DB) error {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );`)
-
 	return err
 }

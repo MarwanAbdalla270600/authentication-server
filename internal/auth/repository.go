@@ -23,7 +23,7 @@ func NewRepository(db *sqlx.DB) RepoInterface {
 
 func (r *repository) GetUserByEmail(email string) (*entity.UserDAO, error) {
 	var user entity.UserDAO
-	err := r.db.Get(&user, "`SELECT * FROM users WHERE email = ?`, email")
+	err := r.db.Get(&user, "SELECT * FROM users WHERE email = ?", email)
 	if err != nil {
 		return nil, err
 	}

@@ -4,7 +4,6 @@ import (
 	"authentication-server/internal/entity"
 	"authentication-server/internal/utils"
 	"errors"
-	"fmt"
 
 	"github.com/google/uuid"
 )
@@ -30,7 +29,7 @@ func (s *service) Login(data *entity.LoginObject) (*entity.AuthResponse, error) 
 	if !utils.ComparePassword(foundUser.Password, data.Password) {
 		return nil, errors.New("password is incorrect")
 	}
-	
+
 	accessToken, err := utils.CreateAccessToken(foundUser)
 	refreshToken := uuid.NewString()
 	if err != nil {
@@ -53,7 +52,6 @@ func (s *service) Login(data *entity.LoginObject) (*entity.AuthResponse, error) 
 }
 
 func (s *service) Register(data *entity.RegisterObject) (*entity.AuthResponse, error) {
-	fmt.Print(data)
 	hashedPassword, err := utils.HashPassword(data.Password)
 	if err != nil {
 		return nil, err
