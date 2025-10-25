@@ -52,12 +52,12 @@ func CreateAccessToken(user *entity.UserDAO) (string, error) {
 		"email": user.Email,
 		"role":  user.Role,
 		"iat":   time.Now().Unix(),
-		"exp":   time.Now().Add(time.Hour).Unix(),
+		"exp":   time.Now().Add(time.Hour * 24).Unix(),
 	}
 
 	// Create ES256 token
 	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
-
+  
 	// Sign with the private key
 	return token.SignedString(privKey)
 }

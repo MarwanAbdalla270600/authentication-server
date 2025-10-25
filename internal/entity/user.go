@@ -36,7 +36,7 @@ type RegisterObject struct {
 }
 
 type AuthResponse struct {
-	User         UserDTO `json:"user"`
-	AccessToken  string  `json:"accessToken"`
-	RefreshToken string  `json:"refreshToken"`
+	User        UserDTO `json:"user"`
+	AccessToken string  `json:"accessToken"`
+	//RefreshToken string  `json:"refreshToken"`
 }

@@ -31,7 +31,7 @@ func (s *service) Login(data *entity.LoginObject) (*entity.AuthResponse, error) 
 	}
 
 	accessToken, err := utils.CreateAccessToken(foundUser)
-	refreshToken := uuid.NewString()
+	//refreshToken := uuid.NewString()
 	if err != nil {
 		return nil, err
 	}
@@ -46,8 +46,8 @@ func (s *service) Login(data *entity.LoginObject) (*entity.AuthResponse, error) 
 			CreatedAt: foundUser.CreatedAt,
 			UpdatedAt: foundUser.UpdatedAt,
 		},
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
+		AccessToken: accessToken,
+		//RefreshToken: refreshToken,
 	}, nil
 }
 
@@ -72,7 +72,7 @@ func (s *service) Register(data *entity.RegisterObject) (*entity.AuthResponse, e
 	}
 
 	accessToken, err := utils.CreateAccessToken(responseData)
-	refreshToken := uuid.NewString()
+	//refreshToken := uuid.NewString()
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func (s *service) Register(data *entity.RegisterObject) (*entity.AuthResponse, e
 			CreatedAt: responseData.CreatedAt,
 			UpdatedAt: responseData.UpdatedAt,
 		},
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
+		AccessToken: accessToken,
+		//RefreshToken: refreshToken,
 	}, nil
 }

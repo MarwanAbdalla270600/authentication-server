@@ -46,3 +46,4 @@ func (c *controller) Login(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusCreated, response)
 }
+
